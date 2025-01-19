@@ -1,15 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar.jsx';
 import Wishlist from '../Pages/Wishlist.jsx';
 
 const BuyProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedRam, setSelectedRam] = useState('4 GB');
+  const[Products,setProducts]=useState([])
 
   const handleQuantityChange = (type) => {
     setQuantity((prev) => (type === 'increment' ? prev + 1 : prev > 1 ? prev - 1 : 1));
   };
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const fetchAllProducts = async () => {
+    setLoading(true);
+    setError('');
+    try {
+        const response = await axios.get('http://localhost:3000/api/product');
+        setProducts(response.data.data);
+    } catch (err) {
+        setError('Failed to fetch products. Please try again later.');
+    } finally {
+        setLoading(false);
+    }
+};
+
+useEffect(() => {
+    fetchAllProducts();
+}, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -20,7 +37,9 @@ const BuyProduct = () => {
         <span >Home</span> &gt; <span>Product details</span>
       </nav>
 
+
       <div className="flex flex-col md:flex-row bg-white shadow-md rounded-lg overflow-hidden">
+        
         <div className="md:w-1/2 p-4">
           <img src="/path-to-image.jpg" alt="Product" className="w-full rounded-lg mb-4" />
           <div className="flex space-x-2">

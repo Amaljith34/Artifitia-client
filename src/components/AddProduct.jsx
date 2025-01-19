@@ -1,104 +1,139 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Products from "../Pages/Products";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const AddProduct = () => {
- 
-    const [variants, setVariants] = useState([
-        { ram: "4 GB", price: 529.99, qty: 1 },
-        { ram: "8 GB", price: 929.99, qty: 3 },
-    ]);
+const AddProductModal = ({ isOpen, onClose, onAdd }) => {
+    const [productName, setProductName] = useState('');
+    const [imageSrc, setImageSrc] = useState(null);
+    const [imageAlt, setImageAlt] = useState('');
+    const [description, setDescription] = useState('');
+    const [price, setPrice] = useState('');
+    const [category, setCategory] = useState('');
+    const [subcategory, setSubcategory] = useState('');
+    const [quantity, setQuantity] = useState('');
+    const [stock, setStock] = useState('');
+    const [rating, setRating] = useState('');
+    const [error, setError] = useState(null);
 
-    const handleAddVariant = () => {
-        setVariants([...variants, { ram: "", price: 0, qty: 1 }]);
+    const handleAddProduct = async () => {
+      console.log('hii');
+      
+        const newProduct = {
+            product_name: productName,
+            imageSrc: imageSrc || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7yiINd-ddL4DzY2uTmp5IRRpOmu9aSFF-uw&s',
+            imageAlt,
+            description,
+            price: parseFloat(price),
+            category,
+            subcategory,
+            quantity: parseInt(quantity, 10) || 0,
+            stock: parseInt(stock, 10),
+            isDeleted: false,
+            rating: parseFloat(rating) || 0,
+        };
+
+        try {
+           
+            const response = await axios.post('http://localhost:3000/api/product', newProduct);
+            console.log(response);
+            
+            
+            if (response.data.success) {
+                onAdd(newProduct); 
+                onClose();
+            } else {
+                setError(response.data.message || 'Failed to add product');
+            }
+        } catch (err) {
+            setError(err.message || 'An error occurred while adding the product');
+        }
     };
 
-    const handleVariantChange = (index, field, value) => {
-        const updatedVariants = [...variants];
-        updatedVariants[index][field] = value;
-        setVariants(updatedVariants);
-    };
+    if (!isOpen) return null;
 
     return (
-        <div className="flex items-center justify-center min-hn  bg-gray-100">
-            <div className="bg-white shadow-lg p-6 rounded-lg w-full max-w-lg">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-xl font-semibold mb-4">Add Product</h2>
-
+                {error && <p className="text-red-500 mb-4">{error}</p>}
+                
                 <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Title:</label>
+                    <label className="block text-sm font-medium mb-1">Product Name:</label>
                     <input
                         type="text"
-                        placeholder="Product title"
-                        className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={productName}
+                        onChange={(e) => setProductName(e.target.value)}
+                        className="w-full border rounded-md px-3 py-2"
+                        required
                     />
                 </div>
-
+                
                 <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Variants:</label>
-                    {variants.map((variant, index) => (
-                        <div key={index} className="flex items-center gap-2 mb-2">
-                            <input
-                                type="text"
-                                value={variant.ram}
-                                placeholder="RAM"
-                                onChange={(e) => handleVariantChange(index, "ram", e.target.value)}
-                                className="border rounded-md px-2 py-1 w-20"
-                            />
-                            <input
-                                type="number"
-                                value={variant.price}
-                                placeholder="Price"
-                                onChange={(e) => handleVariantChange(index, "price", parseFloat(e.target.value))}
-                                className="border rounded-md px-2 py-1 w-24"
-                            />
-                            <input
-                                type="number"
-                                value={variant.qty}
-                                placeholder="Qty"
-                                onChange={(e) => handleVariantChange(index, "qty", parseInt(e.target.value, 10))}
-                                className="border rounded-md px-2 py-1 w-16"
-                            />
-                        </div>
-                    ))}
-                    <button
-                        onClick={handleAddVariant}
-                        className="text-blue-500 text-sm hover:underline"
-                    >
-                        + Add Variant
-                    </button>
-                </div>
-
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Sub Category:</label>
+                    <label className="block text-sm font-medium mb-1">Image Url:</label>
                     <input
                         type="text"
-                        placeholder="Sub category"
-                        className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={imageSrc}
+                        onChange={(e) => setImageSrc(e.target.value)}
+                        className="w-full border rounded-md px-3 py-2"
+                        required
                     />
                 </div>
-
+                
                 <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Description:</label>
-                    <textarea
-                        placeholder="Product description"
-                        className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    ></textarea>
-                </div>
-
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Upload Image:</label>
+                    <label className="block text-sm font-medium mb-1">Price:</label>
                     <input
-                        type="file"
-                        className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        type="number"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                        className="w-full border rounded-md px-3 py-2"
+                        required
                     />
                 </div>
-
+                
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Category:</label>
+                    <input
+                        type="text"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="w-full border rounded-md px-3 py-2"
+                        required
+                    />
+                </div>
+                
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Subcategory:</label>
+                    <input
+                        type="text"
+                        value={subcategory}
+                        onChange={(e) => setSubcategory(e.target.value)}
+                        className="w-full border rounded-md px-3 py-2"
+                        required
+                    />
+                </div>
+                
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Stock:</label>
+                    <input
+                        type="number"
+                        value={stock}
+                        onChange={(e) => setStock(e.target.value)}
+                        className="w-full border rounded-md px-3 py-2"
+                        required
+                    />
+                </div>
+                
                 <div className="flex justify-end gap-2">
-                    <button className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400" >
-                        Discard
+                    <button
+                        onClick={onClose}
+                        className="bg-gray-300 px-4 py-2 rounded-md"
+                    >
+                        Cancel
                     </button>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                        Buy Now
+                    <button
+                        onClick={handleAddProduct}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                    >
+                        Add Product
                     </button>
                 </div>
             </div>
@@ -106,4 +141,4 @@ const AddProduct = () => {
     );
 };
 
-export default AddProduct;
+export default AddProductModal;
