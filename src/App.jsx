@@ -1,21 +1,25 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { ProductList } from './components/ProductList';
+import Registration from './components/auth/Registration.jsx';
+import Products from './Pages/Products.jsx';
+import BuyProduct from './components/BuyProduct.jsx';
+import AddProduct from './components/AddProduct.jsx';
+import Login from './components/auth/Login.jsx';
+import Cart from './Pages/Cart.jsx';
 
-
-function App() {
+export function App() {
   return (
-    <ProductProvider>
-      <Router>
-        <div className="App">
-          {/* <Navbar /> */}
-          <Routes>
-            <Route path="/" element={<ProductList />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/add-product" element={<AddProduct />} />
-          </Routes>
-        </div>
-      </Router>
-    </ProductProvider>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path='/' element={<Registration />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/product' element={<Products />} />
+          <Route path='/buy-product' element={<BuyProduct />} />
+          <Route path='/add-product' element={<AddProduct />} />
+          <Route path='/cart' element={<Cart />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
