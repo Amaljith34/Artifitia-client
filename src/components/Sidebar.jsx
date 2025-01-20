@@ -1,37 +1,4 @@
-// import React from 'react';
 
-// const Sidebar = () => {
-//   return (
-//     <aside className="bg-gray-100 p-4 w-64">
-//       <h2 className="font-bold mb-4">Categories</h2>
-//       <ul className="space-y-2">
-//         <li className="font-medium">All Categories</li>
-//         <li>
-//           <button className="font-medium">Laptop</button>
-//           <ul className="ml-4 space-y-1">
-//             <li>
-//               <label>
-//                 <input type="checkbox" className="mr-2" />
-//                 HP
-//               </label>
-//             </li>
-//             <li>
-//               <label>
-//                 <input type="checkbox" className="mr-2" />
-//                 Dell
-//               </label>
-//             </li>
-//           </ul>
-//         </li>
-//         <li className="font-medium">Tablet</li>
-//         <li className="font-medium">Headphones</li>
-//       </ul>
-//     </aside>
-//   );
-// };
-
-// export default Sidebar;
-// Sidebar.jsx
 import React, { useState } from "react";
 
 const Sidebar = ({ onCategorySelect }) => {

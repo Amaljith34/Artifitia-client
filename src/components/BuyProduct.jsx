@@ -6,6 +6,7 @@ const BuyProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedRam, setSelectedRam] = useState('4 GB');
   const[Products,setProducts]=useState([])
+  const [Loading,setLoading]=useState(false)
 
   const handleQuantityChange = (type) => {
     setQuantity((prev) => (type === 'increment' ? prev + 1 : prev > 1 ? prev - 1 : 1));
