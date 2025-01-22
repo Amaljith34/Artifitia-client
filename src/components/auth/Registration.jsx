@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Registration() {
   const navigate=useNavigate()
@@ -23,9 +24,9 @@ function Registration() {
     setError(null); 
 
     try {
-      const response = await axios.post('http://localhost:3000/api/signup', formData);
+      const response = await axios.post('https://artifitia-server.onrender.com/api/signup', formData);
       if (response.data.success) {
-        setSuccess(response.data.message);
+        toast.success(response.data.message, {style: { color: 'black', fontWeight: 'bold' }});
         setFormData({
           name: '',
           email: '',
@@ -34,7 +35,8 @@ function Registration() {
         navigate('/login')
       }
     } catch (err) {
-      setError(err.response ? err.response.data.message : 'Error occurred');
+      toast.error(err.response ? err.response.data.message : 'Error occurred')
+
     }
   };
 

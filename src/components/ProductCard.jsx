@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const ProductCard = ({ product_name, price, imageSrc, _id }) => {
   const [isInWishlist, setIsInWishlist] = useState(false); 
@@ -31,6 +32,8 @@ const ProductCard = ({ product_name, price, imageSrc, _id }) => {
         body: JSON.stringify({ productId }),
       });
       const data = await response.json();
+      toast.success('Login successfully!', {style: { color: 'black', fontWeight: 'bold' }});
+
       console.log('Added to wishlist:', data);
     } catch (err) {
       console.error('Error adding to wishlist:', err);
@@ -58,7 +61,7 @@ const ProductCard = ({ product_name, price, imageSrc, _id }) => {
       <img
         src={imageSrc}
         alt={product_name}
-        className="h-40 w-full object-cover mb-2 p-8"
+        className="h-64 w-full object-cover mb-2 p-8"
       />
       <h3 className="font-bold text-sm px-8">{product_name}</h3>
       <p className="text-gray-600 px-8">${price}</p>
@@ -72,7 +75,7 @@ const ProductCard = ({ product_name, price, imageSrc, _id }) => {
         </div>
         <button
           onClick={handleBuyClick}
-          className="bg-blue-500 text-white px-2 py-1 rounded"
+          className="bg-blue-500 text-white px-4 py-1 rounded"
         >
           Buy
         </button>

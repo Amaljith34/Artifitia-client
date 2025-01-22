@@ -9,7 +9,7 @@ const Sidebar = ({ onCategorySelect }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/admin/subcategory");
+        const response = await axios.get("https://artifitia-server.onrender.com/api/admin/subcategory");
         setCategories(response.data.data); 
         console.log(response.data.data);
         

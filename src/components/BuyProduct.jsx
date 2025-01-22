@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 import Wishlist from '../Pages/Wishlist';
+import { toast } from 'react-toastify';
 
 const BuyProduct = () => {
   const { id } = useParams(); 
@@ -19,12 +20,11 @@ const BuyProduct = () => {
     setError('');
     
     try {
-      const response = await axios.get(`http://localhost:3000/api/product/${id}`);
+      const response = await axios.get(`https://artifitia-server.onrender.com/api/product/${id}`);
       setProductDetails(response.data.data);
-      
-      
     } catch (err) {
-      setError('Failed to fetch product details. Please try again later.');
+      toast.error('Failed to fetch product details. Please try again later.')
+
     } finally {
       setLoading(false);
     }
@@ -38,8 +38,10 @@ const BuyProduct = () => {
     navigate('/product')
   }
   const handleBuy=()=>{
-    alert('Buy success')
-    navigate('/product')
+    toast.success('Buy success', {style: { color: 'black', fontWeight: 'bold' }});
+    setTimeout(() => {
+      navigate('/product')
+    }, 1000);
 
   }
   

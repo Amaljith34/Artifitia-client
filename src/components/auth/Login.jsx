@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login() {
     const navigate=useNavigate()
@@ -21,28 +22,33 @@ function Login() {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/login', formData);
+      const response = await axios.post('https://artifitia-server.onrender.com/api/login', formData);
       if (response.data.success) {
         console.log(response.data);
         
         localStorage.setItem("id",response.data.userId)
         setSuccess(response.data.message);
-        
+        toast.success('Login successfully!', {style: { color: 'black', fontWeight: 'bold' }});
+
+        setTimeout(()=>{
+          navigate('/product')
+        },1000)
         navigate('/product')
       }
     } catch (err) {
-      console.log(err);
-       console.log(err.response.status);
        
       if(err.response.status==401){
-         alert(err.response.data.message)
+        toast.error(err.response.data.message)
+
       }
      else if(err.response.status==400){
-        alert(err.response.data.message)
+       toast.error(err.response.data.message)
+      setTimeout(() => {
         navigate('/')
+      }, 1000);
      }
      else if(err.response.status==403){
-      alert(err.response.data.message)
+      toast.error(err.response.data.message)
    }
 
     }

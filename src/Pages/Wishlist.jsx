@@ -7,7 +7,7 @@ const Wishlist = ({ isOpen, onClose }) => {
   
   const fetchWishList=async(req,res)=>{
     try {
-      const response=await axios.get(`http://localhost:3000/api/wishlist/${id}`)
+      const response=await axios.get(`https://artifitia-server.onrender.com/api/wishlist/${id}`)
       
       setWishlist(response.data.products)
     } catch (error) {
@@ -19,7 +19,7 @@ const Wishlist = ({ isOpen, onClose }) => {
      fetchWishList()
   },[])
   const handleRemoveWishlist=async(productid)=>{
-   const response= await axios.delete(`http://localhost:3000/api/wishlist/${id}`,{productId:productid})
+   const response= await axios.delete(`https://artifitia-server.onrender.com/api/wishlist/${id}`,{productId:productid})
    console.log(response.data);
    alert('remove wishlist')
   }

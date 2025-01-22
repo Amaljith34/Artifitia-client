@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
+import { toast } from 'react-toastify';
 
 const AddSubCategoryModal = ({ isOpen, onClose }) => {
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -10,7 +11,7 @@ const AddSubCategoryModal = ({ isOpen, onClose }) => {
       useEffect(() => {
         const fetchCategories = async () => {
           try {
-            const response = await axios.get("http://localhost:3000/api/admin/category");
+            const response = await axios.get("https://artifitia-server.onrender.com/api/admin/category");
             setCategories(response.data.data);
     
           } catch (err) {
@@ -23,21 +24,23 @@ const AddSubCategoryModal = ({ isOpen, onClose }) => {
 
     const handleAdd = async () => {
             try {
-                const response = await axios.post('http://localhost:3000/api/admin/subcategory', {
+                const response = await axios.post('https://artifitia-server.onrender.com/api/admin/subcategory', {
                     name: subCategoryName.trim(),
                     categoryId: selectedCategory,
                 });
 
                 if (response.data.success) {
-                    alert('Subcategory added successfully!');
+                    toast.success('Subcategory added successfully!', {style: { color: 'black', fontWeight: 'bold' }});
                     setSelectedCategory('');
                     setSubCategoryName('');
                     onClose();
                 } else {
-                    alert(response.data.message || 'Error adding subcategory');
+                    toast.error(response.data.message  || 'Error adding subcategory')
+
                 }
             } catch (err) {
-                alert('An error occurred while adding the subcategory.');
+                toast.error('An error occurred while adding the subcategory.')
+
             }
        
     };

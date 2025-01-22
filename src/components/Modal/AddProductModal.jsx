@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AddProductModal = ({ isOpen, onClose }) => {
   const [categories, setCategories] = useState([]);
@@ -18,7 +19,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/admin/category");
+        const response = await axios.get("https://artifitia-server.onrender.com/api/admin/category");
         setCategories(response.data.data);
       } catch (err) {
         setError("Failed to fetch categories.");
@@ -35,7 +36,7 @@ const AddProductModal = ({ isOpen, onClose }) => {
       try {
         console.log('hii');
         
-        const response = await axios.get(`http://localhost:3000/api/admin/subcategori`);
+        const response = await axios.get(`https://artifitia-server.onrender.com/api/admin/subcategori`);
         console.log(response.data);
         
         setSubcategories(response.data.data);
@@ -64,17 +65,17 @@ const AddProductModal = ({ isOpen, onClose }) => {
     };
 
     try {
-      const response = await axios.post("http://localhost:3000/api/admin/product", newProduct);
+      const response = await axios.post("https://artifitia-server.onrender.com/api/admin/product", newProduct);
       if (response.data.success) {
-        alert(response.data.message)
+        toast.success(response.data.message, {style: { color: 'black', fontWeight: 'bold' }});
         onClose(); 
         onAdd(newProduct);  
       } else if(response.data.status===400) {
-        alert(response.data.message)
+        toast.error(response.data.message)
       }
     } catch (err) {
       if(err.response.status==400){
-          alert(err.response.data.message)
+        toast.error(err.response.data.message)
           onClose(); 
       }
     }

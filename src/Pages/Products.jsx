@@ -48,7 +48,7 @@ const Products = () => {
         setLoading(true);
         setError('');
         try {
-            const response = await axios.get('http://localhost:3000/api/product');
+            const response = await axios.get('https://artifitia-server.onrender.com/api/product');
             setProducts(response.data.data);
         } catch (err) {
             setError('Failed to fetch products. Please try again later.');
@@ -94,7 +94,7 @@ const Products = () => {
                     ) : error ? (
                         <p className="text-red-500 text-center">{error}</p>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 mt-10">
                             {products.map((product) => (
                                 <ProductCard key={product._id} {...product} />
                             ))}

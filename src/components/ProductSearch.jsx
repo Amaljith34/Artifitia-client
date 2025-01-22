@@ -21,7 +21,7 @@ export const Productsearch = () => {
   const fetchAllProducts = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/api/product');
+      const response = await axios.get('https://artifitia-server.onrender.com/api/product');
       setProducts(response.data.data);
     } catch (err) {
       setError('Failed to fetch products. Please try again later.');

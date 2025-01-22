@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const AddCategoryModal = ({ isOpen, onClose }) => {
     const [categoryName, setCategoryName] = useState('');
@@ -10,24 +11,25 @@ console.log(categoryName);
         
         try {
             console.log('hii');
-                const response = await axios.post('http://localhost:3000/api/admin/category',{name:categoryName});
-                    console.log(response);
+                const response = await axios.post('https://artifitia-server.onrender.com/api/admin/category',{name:categoryName});
+                   
                     if(response.data.success){
-                        alert(response.data.message)
+                        toast.success(response.data.message, {style: { color: 'black', fontWeight: 'bold' }});
                         setCategoryName('');
                         onClose();
                     }
       
         } catch (error) {
-            console.log(error);
-            
+
             if(error.response.status==400){
-                alert(error.response.data.message)
+                toast.error(error.response.data.message)
                 setCategoryName('');
                 onClose()
             }
-            console.log(error);
-            
+            else{
+                toast.error(error)
+            }
+
         }        
             
         

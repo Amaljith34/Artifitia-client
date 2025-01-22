@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Navbar = ({ onWishlistClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,13 +18,21 @@ const Navbar = ({ onWishlistClick }) => {
     }
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/products?search=${searchQuery}`
+        `https://artifitia-server.onrender.com/api/products?search=${searchQuery}`
       );
       navigate('/products', { state: { products: response.data.data } });
     } catch (error) {
       alert("No products found or an error occurred.");
     }
   };
+  const handleLogout=()=>{
+    localStorage.clear("id")
+    toast.success('Logout successfully!', {style: { color: 'black', fontWeight: 'bold' }});
+    setTimeout(() => {
+      navigate('/login')
+    }, 2000);
+
+  }
 
   return (
     <nav className="bg-blue-700 p-4 flex items-center justify-between text-white">
@@ -50,10 +59,10 @@ const Navbar = ({ onWishlistClick }) => {
       </div>
       <div className="flex space-x-4">
         <a
-          onClick={() => navigate('/login')}
+          onClick={handleLogout}
           className="hover:underline cursor-pointer"
         >
-          Sign In
+          Logout
         </a>
         <a
           onClick={() => navigate('/cart')}

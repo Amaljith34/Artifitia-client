@@ -6,11 +6,14 @@ import BuyProduct from './components/BuyProduct.jsx';
 import Login from './components/auth/Login.jsx';
 import Cart from './Pages/Cart.jsx';
 import { Productsearch } from './components/ProductSearch.jsx';
+import {ToastContainer} from 'react-toastify'
 
 export function App() {
   return (
     <Router>
       <div className="App">
+      <ToastContainer position="top-center" className="text-black" autoClose={3000} />
+
         <Routes>
           <Route path='/' element={<Registration />} />
           <Route path='/login' element={<Login />} />
