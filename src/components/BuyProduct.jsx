@@ -1,108 +1,85 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from './Navbar.jsx';
-import Wishlist from '../Pages/Wishlist.jsx';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import Navbar from './Navbar';
+import Wishlist from '../Pages/Wishlist';
 
 const BuyProduct = () => {
+  const { id } = useParams(); 
   const [quantity, setQuantity] = useState(1);
   const [selectedRam, setSelectedRam] = useState('4 GB');
-  const[Products,setProducts]=useState([])
-  const [Loading,setLoading]=useState(false)
-
-  const handleQuantityChange = (type) => {
-    setQuantity((prev) => (type === 'increment' ? prev + 1 : prev > 1 ? prev - 1 : 1));
-  };
+  const [productDetails, setProductDetails] = useState(null);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
-  const fetchAllProducts = async () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate=useNavigate()
+
+  const fetchProductDetails = async () => {
     setLoading(true);
     setError('');
+    
     try {
-        const response = await axios.get('http://localhost:3000/api/product');
-        setProducts(response.data.data);
+      const response = await axios.get(`http://localhost:3000/api/product/${id}`);
+      setProductDetails(response.data.data);
+      
+      
     } catch (err) {
-        setError('Failed to fetch products. Please try again later.');
+      setError('Failed to fetch product details. Please try again later.');
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
-useEffect(() => {
-    fetchAllProducts();
-}, []);
+  useEffect(() => {
+    fetchProductDetails();
+  }, [id]);
+
+  const handleBake=()=>{
+    navigate('/product')
+  }
+  const handleBuy=()=>{
+    alert('Buy success')
+    navigate('/product')
+
+  }
+  
 
   return (
     <div className="min-h-screen bg-gray-100">
-    <Navbar onWishlistClick={() => setIsWishlistOpen(true)} />
-    <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
-    <main className="p-6">
-      <nav className="text-sm text-gray-500 mb-4 mt-8">
-        <span >Home</span> &gt; <span>Product details</span>
-      </nav>
-
-
-      <div className="flex flex-col md:flex-row bg-white shadow-md rounded-lg overflow-hidden">
-        
-        <div className="md:w-1/2 p-4">
-          <img src="/path-to-image.jpg" alt="Product" className="w-full rounded-lg mb-4" />
-          <div className="flex space-x-2">
-            <img src="/path-to-image.jpg" alt="Thumbnail 1" className="w-16 h-16 rounded-lg" />
-            <img src="/path-to-image.jpg" alt="Thumbnail 2" className="w-16 h-16 rounded-lg" />
-          </div>
+      <Navbar onWishlistClick={() => setIsWishlistOpen(true)} />
+      <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
+      <main className="p-6">
+        {loading ? (
+          <p className="text-center text-blue-500">Loading...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : productDetails ? (
+          <div className="bg-white shadow-md rounded-lg p-6">
+            <h1 className="text-2xl font-bold">{productDetails.product_name}</h1>
+            <p>${productDetails.price}</p>
+            <p>Stock: {productDetails.stock}</p>
+            <img src={productDetails.imageSrc} alt={productDetails.imageAlt} />
+            {/* <p> <span>{productDetails.category}</span> <span>{productDetails.subcategory}</span> </p> */}
+            <p>Description: {productDetails.ddescription}</p>
+            <p>{}</p>
+            <div className="flex">
+          {[...Array(5)].map((_, i) => (
+            <span key={i} className="text-yellow-500">
+              &#9733;
+            </span>
+          ))}
         </div>
-
-        <div className="md:w-1/2 p-4">
-          <h1 className="text-2xl font-bold mb-2">HP AMD Ryzen 3</h1>
-          <p className="text-xl text-gray-700 mb-2">$529.99</p>
-          <p className="text-sm text-green-600 mb-2">Availability: <span className="font-bold">In stock</span></p>
-          <p className="text-sm text-red-600 mb-4">Hurry up! only 34 product left in stock!</p>
-
-          <div className="mb-4">
-            <span className="font-bold">Ram:</span>
-            <div className="flex space-x-2 mt-2">
-              <button 
-                className="px-4 py-2 rounded-md border bg-blue-500 text-white"
-              >
-                4 GB
-              </button>
-              <button 
-                className="px-4 py-2 rounded-md border bg-gray-200 text-black"
-              >
-                8 GB
-              </button>
-              <button 
-                className="px-4 py-2 rounded-md border bg-gray-200 text-black"
-              >
-                16 GB
-              </button>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <span className="font-bold">Quantity:</span>
-            <div className="flex items-center space-x-2 mt-2">
-              <button 
-                className="px-4 py-2 bg-gray-200 rounded-md"
-              >
-                -
-              </button>
-              <span className="font-bold text-lg">1</span>
-              <button 
-                className="px-4 py-2 bg-gray-200 rounded-md"
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          <div className="flex space-x-4">
-            <button className="bg-yellow-400 text-black px-6 py-2 rounded-md">Edit product</button>
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-md">Buy it now</button>
-          </div>
+        <div>
+          <button onClick={handleBake} className='bg-green-500 px-2 py-1 ml-4 rounded-md'>Back</button>
+          <button className='bg-blue-500 px-2 py-1 ml-4 rounded-md ' onClick={handleBuy}>Continiou</button>
         </div>
-      </div>
-    </main>
-  </div>
-);
+          </div>
+        ) : (
+          <p className="text-center">No product details available.</p>
+        )}
+      </main>
+    </div>
+  );
 };
-
 
 export default BuyProduct;

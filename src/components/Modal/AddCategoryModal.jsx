@@ -1,16 +1,36 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 
-const AddCategoryModal = ({ isOpen, onClose, onAdd }) => {
+const AddCategoryModal = ({ isOpen, onClose }) => {
     const [categoryName, setCategoryName] = useState('');
+console.log(categoryName);
 
-    const handleAdd = () => {
-        if (categoryName.trim()) {
-            onAdd(categoryName);
-            setCategoryName('');
-            onClose();
-        } else {
-            alert('Please enter a valid category name.');
-        }
+    const handleAdd = async (e) => {
+        e.preventDefault()
+        
+        try {
+            console.log('hii');
+                const response = await axios.post('http://localhost:3000/api/admin/category',{name:categoryName});
+                    console.log(response);
+                    if(response.data.success){
+                        alert(response.data.message)
+                        setCategoryName('');
+                        onClose();
+                    }
+      
+        } catch (error) {
+            console.log(error);
+            
+            if(error.response.status==400){
+                alert(error.response.data.message)
+                setCategoryName('');
+                onClose()
+            }
+            console.log(error);
+            
+        }        
+            
+        
     };
 
     if (!isOpen) return null;

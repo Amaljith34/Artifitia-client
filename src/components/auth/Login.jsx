@@ -23,11 +23,28 @@ function Login() {
     try {
       const response = await axios.post('http://localhost:3000/api/login', formData);
       if (response.data.success) {
+        console.log(response.data);
+        
+        localStorage.setItem("id",response.data.userId)
         setSuccess(response.data.message);
+        
         navigate('/product')
       }
     } catch (err) {
-      setError(err.response ? err.response.data.message : 'Error occurred');
+      console.log(err);
+       console.log(err.response.status);
+       
+      if(err.response.status==401){
+         alert(err.response.data.message)
+      }
+     else if(err.response.status==400){
+        alert(err.response.data.message)
+        navigate('/')
+     }
+     else if(err.response.status==403){
+      alert(err.response.data.message)
+   }
+
     }
   };
 
